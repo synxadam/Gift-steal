@@ -1,0 +1,62 @@
+local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
+
+local win = DiscordLib:Window("SynxAdam")
+
+local serv = win:Server("Box Stealer", "")
+
+local btns = serv:Channel("Scripts")
+
+btns:Button("Gift Giver", function()
+local player = game:GetService("Players").LocalPlayer
+local character = player.Character
+local humanoidRootPart = character.HumanoidRootPart
+local workspace = game:GetService("Workspace")
+
+-- Save the initial CFrame of the character
+local initialCFrame = humanoidRootPart.CFrame
+
+-- Define a table of the TextureIds to search for
+local textureIds = {
+  "rbxassetid://1223053797",
+  "rbxassetid://6271379076",
+  "rbxassetid://190001518",
+  "rbxassetid://11496804920",
+}
+
+while true do
+  -- Find all of the GiftBoxes in the GameDebris folder
+  local giftBoxes = workspace.GameDebris:GetChildren()
+  local giftBoxFound = false
+
+  -- Iterate through the table of TextureIds
+  for _, textureId in pairs(textureIds) do
+    -- Iterate through each GiftBox
+    for _, giftBox in pairs(giftBoxes) do
+      -- Check if the GiftBox has a child mesh
+      if giftBox:FindFirstChild("Mesh") and giftBox.Mesh then
+        -- Check if the child mesh has the current TextureId
+        if giftBox.Mesh.TextureId == textureId then
+          -- Teleport the player's character to the GiftBox
+          humanoidRootPart.CFrame = giftBox.CFrame
+          giftBoxFound = true
+          break
+        end
+      end
+    end
+
+    -- If a GiftBox was found with the current TextureId, break out of the loop
+    if giftBoxFound then
+      break
+    end
+  end
+
+  -- If no GiftBoxes were found with any of the specific TextureIds, teleport the player's character back to its initial position
+  if not giftBoxFound then
+    humanoidRootPart.CFrame = initialCFrame
+    break
+  end
+
+  wait(0.3)
+end
+
+end)
